@@ -1,18 +1,22 @@
 import { useMemo, useState } from 'react';
 import Dashboard from './components/Dashboard';
+import FinancePortal from './components/FinancePortal';
+import MyRequests from './components/MyRequests';
 import NewRequestForm from './components/NewRequestForm';
+import RequestDetail from './components/RequestDetail';
 import { requests as initialRequests, summaryCards } from './data';
 import type { RequestItem, RequestType, RequestStatus, Role, PriorityLevel } from './types';
 
 export type RequestFilterType = RequestType | 'All Types';
 
 function App() {
-  const [view, setView] = useState<'dashboard' | 'newRequest'>('dashboard');
+  const [view, setView] = useState<'dashboard' | 'myRequests' | 'newRequest' | 'requestDetail' | 'financePortal'>('dashboard');
   const [currentRole, setCurrentRole] = useState<Role>('Requestor');
   const [search, setSearch] = useState('');
   const [selectedStatus, setSelectedStatus] = useState<RequestStatus | 'All'>('All');
   const [selectedType, setSelectedType] = useState<RequestFilterType>('All Types');
   const [requestList, setRequestList] = useState<RequestItem[]>(initialRequests);
+  const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
 
   const filteredRequests = useMemo(() => {
     return requestList.filter((request) => {
@@ -39,9 +43,7 @@ function App() {
           return {
             ...card,
             value: String(
-              requestList.filter((request) =>
-                ['Submitted', 'Pending Manager Review'].includes(request.status),
-              ).length,
+              requestList.filter((request) => ['Submitted', 'Pending Manager Review'].includes(request.status)).length,
             ),
           };
         }
@@ -50,9 +52,7 @@ function App() {
           return {
             ...card,
             value: String(
-              requestList.filter((request) =>
-                ['In-Review', 'Awaiting Approval'].includes(request.status),
-              ).length,
+              requestList.filter((request) => ['In-Review', 'Awaiting Approval'].includes(request.status)).length,
             ),
           };
         }
@@ -65,6 +65,12 @@ function App() {
       }),
     [requestList],
   );
+
+  const selectedRequest = selectedRequestId ? requestList.find((request) => request.id === selectedRequestId) : null;
+
+  const handleUpdateRequest = (id: string, changes: Partial<RequestItem>) => {
+    setRequestList((current) => current.map((request) => (request.id === id ? { ...request, ...changes } : request)));
+  };
 
   const handleCreateRequest = (request: {
     title: string;
@@ -107,7 +113,8 @@ function App() {
     };
 
     setRequestList((current) => [newRequest, ...current]);
-    setView('dashboard');
+    setSelectedRequestId(id);
+    setView('myRequests');
   };
 
   return (
@@ -119,12 +126,16 @@ function App() {
             <p>Financial Services Request</p>
           </div>
         </div>
-        <nav className="topnav">
+            <nav className="topnav">
           <button className={`nav-button ${view === 'dashboard' ? 'active' : ''}`} onClick={() => setView('dashboard')}>
             Dashboard
           </button>
-          <button className="nav-button">My Requests</button>
-          <button className="nav-button">Finance Login</button>
+          <button className={`nav-button ${view === 'myRequests' ? 'active' : ''}`} onClick={() => setView('myRequests')}>
+            My Requests
+          </button>
+          <button className={`nav-button ${view === 'financePortal' ? 'active' : ''}`} onClick={() => setView('financePortal')}>
+            Finance Login
+          </button>
           <button className="nav-button icon">Tools</button>
           <button className="action-button" onClick={() => setView('newRequest')}>
             + New Request
@@ -133,7 +144,7 @@ function App() {
       </header>
 
       <main className="content">
-        {view === 'dashboard' ? (
+        {view === 'dashboard' && (
           <Dashboard
             requests={filteredRequests}
             summaryCards={dynamicSummary}
@@ -147,9 +158,40 @@ function App() {
             onRoleChange={setCurrentRole}
             onCreateRequest={() => setView('newRequest')}
           />
-        ) : (
-          <NewRequestForm onBack={() => setView('dashboard')} onSubmit={handleCreateRequest} />
         )}
+
+        {view === 'myRequests' && (
+          <MyRequests
+            requests={filteredRequests}
+            search={search}
+            selectedStatus={selectedStatus}
+            selectedType={selectedType}
+            onSearch={setSearch}
+            onStatusChange={setSelectedStatus}
+            onTypeChange={setSelectedType}
+            onOpenRequest={(id) => {
+              setSelectedRequestId(id);
+              setView('requestDetail');
+            }}
+          />
+        )}
+
+        {view === 'financePortal' && (
+          <FinancePortal
+            requests={filteredRequests}
+            onUpdateRequest={handleUpdateRequest}
+            onReviewRequest={(id) => {
+              setSelectedRequestId(id);
+              setView('requestDetail');
+            }}
+          />
+        )}
+
+        {view === 'requestDetail' && selectedRequest && (
+          <RequestDetail request={selectedRequest} onBack={() => setView('myRequests')} />
+        )}
+
+        {view === 'newRequest' && <NewRequestForm onBack={() => setView('myRequests')} onSubmit={handleCreateRequest} />}
       </main>
     </div>
   );

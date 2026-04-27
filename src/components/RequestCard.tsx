@@ -20,11 +20,18 @@ const cardAccent: Record<string, string> = {
 
 interface RequestCardProps {
   request: RequestItem;
+  onOpen?: () => void;
 }
 
-export default function RequestCard({ request }: RequestCardProps) {
+export default function RequestCard({ request, onOpen }: RequestCardProps) {
   return (
-    <article className={`request-card ${cardAccent[request.status]}`}>
+    <article
+      className={`request-card ${cardAccent[request.status]} ${onOpen ? 'clickable' : ''}`}
+      onClick={onOpen}
+      role={onOpen ? 'button' : undefined}
+      tabIndex={onOpen ? 0 : undefined}
+      onKeyDown={onOpen ? (event) => { if (event.key === 'Enter' || event.key === ' ') onOpen(); } : undefined}
+    >
       <div className="request-card-header">
         <span className="request-id"># {request.id}</span>
         <span className={`status-pill ${statusTone[request.status]}`}>{request.status}</span>

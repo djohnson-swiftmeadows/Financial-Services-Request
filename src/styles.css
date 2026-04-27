@@ -217,6 +217,185 @@ button, input {
   gap: 10px;
 }
 
+.finance-portal-shell {
+  display: grid;
+  gap: 24px;
+}
+
+.finance-portal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.finance-role-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pill-button {
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  border-radius: 999px;
+  padding: 10px 18px;
+  background: white;
+  color: #334155;
+  cursor: pointer;
+}
+
+.pill-selected {
+  background: #4338ca;
+  color: white;
+  border-color: transparent;
+}
+
+.portal-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+.portal-section {
+  background: white;
+  border-radius: 28px;
+  padding: 26px;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.section-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.toggle-group {
+  display: flex;
+  gap: 10px;
+}
+
+.manager-list,
+.assignee-list {
+  display: grid;
+  gap: 16px;
+}
+
+.portal-request-row {
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 20px;
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+}
+
+.portal-request-main {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.request-number,
+.request-id,
+.request-type,
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 0.85rem;
+}
+
+.request-number {
+  font-weight: 700;
+  background: #eef2ff;
+  color: #4338ca;
+}
+
+.portal-request-title h3 {
+  margin: 0 0 8px;
+}
+
+.request-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+  color: #64748b;
+}
+
+.portal-request-actions {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+.portal-request-actions select,
+.portal-request-actions input {
+  min-height: 48px;
+  border-radius: 14px;
+  border: 1px solid #d1d5db;
+  padding: 0 12px;
+  background: white;
+}
+
+.portal-request-actions button {
+  min-height: 48px;
+  border-radius: 14px;
+}
+
+.director-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.director-panels-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 16px;
+}
+
+.disposition-row,
+.attention-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 16px;
+  border-radius: 16px;
+  background: #f8fafc;
+  margin-bottom: 10px;
+}
+
+.attention-panel .attention-item {
+  margin-bottom: 10px;
+}
+
+.attention-danger {
+  border-left: 4px solid #ef4444;
+}
+
+.attention-warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.attention-neutral {
+  border-left: 4px solid #4338ca;
+}
+
+.finance-portal-shell h2,
+.finance-portal-shell h3 {
+  margin: 0;
+}
+
 .summary-icon {
   width: 40px;
   height: 40px;
@@ -330,6 +509,15 @@ button, input {
   display: grid;
   gap: 18px;
   min-height: 320px;
+}
+
+.request-card.clickable {
+  cursor: pointer;
+}
+
+.request-card.clickable:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 46px rgba(15, 23, 42, 0.1);
 }
 
 .request-card.card-accent-neutral { border-left: 4px solid #94a3b8; }
@@ -725,6 +913,291 @@ button, input {
   background: white;
   border-radius: 24px;
   border: 1px dashed #cbd5e1;
+}
+
+.my-requests-shell,
+.request-detail-shell {
+  display: grid;
+  gap: 24px;
+}
+
+.my-requests-header {
+  display: grid;
+  gap: 12px;
+}
+
+.filter-controls {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.select-control {
+  display: grid;
+  gap: 8px;
+}
+
+.select-control label {
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.select-control select {
+  min-width: 180px;
+  min-height: 52px;
+  border-radius: 16px;
+  border: 1px solid #d1d5db;
+  padding: 0 16px;
+  background: white;
+}
+
+.request-list.compact-list {
+  display: grid;
+  gap: 18px;
+}
+
+.request-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+}
+
+.request-detail-card {
+  background: white;
+  border-radius: 28px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  padding: 32px;
+  display: grid;
+  gap: 24px;
+}
+
+.request-detail-top {
+  display: grid;
+  gap: 16px;
+}
+
+.request-detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.request-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #475569;
+  background: #f8fafc;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+}
+
+.status-pill-detail {
+  display: inline-flex;
+  margin-top: 10px;
+  background: #eef2ff;
+  color: #4338ca;
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-weight: 700;
+}
+
+.request-detail-info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.request-detail-block {
+  background: #f8fafc;
+  border-radius: 24px;
+  padding: 22px;
+}
+
+.progress-detail-line {
+  display: grid;
+  gap: 18px;
+}
+
+.progress-detail-step {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.progress-detail-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 999px;
+  background: #e2e8f0;
+}
+
+.progress-detail-dot.active { background: #7c3aed; }
+.progress-detail-dot.complete { background: #4f46e5; }
+
+.progress-detail-label {
+  font-weight: 700;
+}
+
+.progress-detail-bar {
+  flex: 1;
+  height: 2px;
+  background: #e2e8f0;
+}
+
+.approval-list {
+  display: grid;
+  gap: 14px;
+}
+
+.approval-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.approval-step-number {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 700;
+}
+
+.approval-title {
+  margin: 0;
+  font-weight: 700;
+}
+
+.approval-status {
+  display: inline-flex;
+  margin-top: 6px;
+  color: #475569;
+  font-size: 0.85rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #f8fafc;
+}
+
+.approval-status.complete { color: #166534; }
+
+.request-detail-footer-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.detail-panel {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  padding: 24px;
+}
+
+.detail-panel h3 {
+  margin: 0 0 14px;
+}
+
+.info-row {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.info-row span {
+  color: #64748b;
+  font-size: 0.92rem;
+}
+
+.notes-attachments-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+}
+
+.notes-panel,
+.attachments-panel {
+  background: white;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  padding: 22px;
+}
+
+.notes-header,
+.attachments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.note-list {
+  display: grid;
+  gap: 14px;
+}
+
+.note-item {
+  background: #f8fafc;
+  border-radius: 20px;
+  padding: 18px;
+}
+
+.note-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.note-header strong {
+  color: #0f172a;
+}
+
+.note-item p {
+  margin: 0;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.empty-note {
+  color: #64748b;
+  padding: 26px;
+  text-align: center;
+  border: 1px dashed #cbd5e1;
+  border-radius: 20px;
+}
+
+.attachment-dropzone {
+  min-height: 180px;
+  border: 2px dashed #cbd5e1;
+  border-radius: 20px;
+  display: grid;
+  place-items: center;
+  color: #64748b;
+  text-align: center;
+  padding: 24px;
+}
+
+.reject-button {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+@media (max-width: 900px) {
+  .request-detail-info-grid,
+  .request-detail-footer-grid,
+  .notes-attachments-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 900px) {
