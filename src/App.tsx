@@ -4,6 +4,7 @@ import FinancePortal from './components/FinancePortal';
 import MyRequests from './components/MyRequests';
 import NewRequestForm from './components/NewRequestForm';
 import RequestDetail from './components/RequestDetail';
+import NotificationCenter from './components/NotificationCenter';
 import { requests as initialRequests, summaryCards } from './data';
 import type { RequestItem, RequestType, RequestStatus, Role, PriorityLevel } from './types';
 
@@ -17,6 +18,7 @@ function App() {
   const [selectedType, setSelectedType] = useState<RequestFilterType>('All Types');
   const [requestList, setRequestList] = useState<RequestItem[]>(initialRequests);
   const [selectedRequestId, setSelectedRequestId] = useState<string | null>(null);
+  const [nextFsrNumber, setNextFsrNumber] = useState(1); // Starts at 1, will be formatted as 0001
 
   const filteredRequests = useMemo(() => {
     return requestList.filter((request) => {
@@ -81,7 +83,10 @@ function App() {
     note: string;
     attachments: string[];
   }) => {
-    const id = `FSR-${Date.now().toString().slice(-6)}`;
+    const fiscalYear = '26'; // Current fiscal year
+    const sequentialNumber = nextFsrNumber.toString().padStart(4, '0');
+    const id = `FSR-${fiscalYear}-${sequentialNumber}`;
+    setNextFsrNumber(nextFsrNumber + 1);
     const createdAt = new Date().toLocaleDateString('en-US');
 
     const newRequest: RequestItem = {
@@ -157,6 +162,10 @@ function App() {
             onTypeChange={setSelectedType}
             onRoleChange={setCurrentRole}
             onCreateRequest={() => setView('newRequest')}
+            onOpenRequest={(id) => {
+              setSelectedRequestId(id);
+              setView('requestDetail');
+            }}
           />
         )}
 
@@ -193,6 +202,8 @@ function App() {
 
         {view === 'newRequest' && <NewRequestForm onBack={() => setView('myRequests')} onSubmit={handleCreateRequest} />}
       </main>
+
+      <NotificationCenter />
     </div>
   );
 }

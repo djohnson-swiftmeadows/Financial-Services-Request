@@ -14,6 +14,7 @@ interface DashboardProps {
   onTypeChange: (type: RequestType | 'All Types') => void;
   onRoleChange: (role: Role) => void;
   onCreateRequest: () => void;
+  onOpenRequest: (id: string) => void;
 }
 
 export default function Dashboard({
@@ -28,6 +29,7 @@ export default function Dashboard({
   onTypeChange,
   onRoleChange,
   onCreateRequest,
+  onOpenRequest,
 }: DashboardProps) {
   return (
     <div className="dashboard-shell">
@@ -47,7 +49,6 @@ export default function Dashboard({
               ))}
             </select>
           </div>
-          <button type="button" className="action-button" onClick={onCreateRequest}>+ New Request</button>
         </div>
       </div>
 
@@ -63,6 +64,7 @@ export default function Dashboard({
 
       <section className="search-filter-bar">
         <div className="search-input-wrapper">
+          <span className="search-icon">🔍</span>
           <input
             value={search}
             onChange={(event) => onSearch(event.target.value)}
@@ -99,7 +101,7 @@ export default function Dashboard({
 
       <section className="request-list">
         {requests.map((request) => (
-          <RequestCard key={request.id} request={request} />
+          <RequestCard key={request.id} request={request} onOpen={() => onOpenRequest(request.id)} />
         ))}
         {requests.length === 0 && <div className="empty-state">No requests match the selected filters.</div>}
       </section>
