@@ -1,4 +1,5 @@
 import type { RequestItem } from '../types';
+import ProgressBar from './ProgressBar';
 
 const statusTone: Record<string, string> = {
   Submitted: 'badge-neutral',
@@ -42,7 +43,9 @@ export default function RequestCard({ request, onOpen }: RequestCardProps) {
         <span className="request-type">{request.type}</span>
       </div>
 
-      <div className="progress-line">
+      <ProgressBar request={request} interactive={true} />
+
+      <div className="progress-line" style={{ display: 'none' }}>
         {request.progress.map((step, index) => (
           <div key={step.label} className="progress-step">
             <div className={`step-dot ${step.status}`} />

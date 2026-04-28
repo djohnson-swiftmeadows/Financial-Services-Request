@@ -1,11 +1,75 @@
-import type { RequestItem } from '../types';
+import { useState } from 'react';
+import type { RequestItem, RequestUpdate } from '../types';
+import ProgressBar from './ProgressBar';
 
 interface RequestDetailProps {
   request: RequestItem;
   onBack: () => void;
+  onUpdateRequest?: (id: string, changes: Partial<RequestItem>) => void;
 }
 
-export default function RequestDetail({ request, onBack }: RequestDetailProps) {
+export default function RequestDetail({ request, onBack, onUpdateRequest }: RequestDetailProps) {
+  const [showNoteForm, setShowNoteForm] = useState(false);
+  const [noteText, setNoteText] = useState('');
+  const [dragActive, setDragActive] = useState(false);
+  const [attachmentFiles, setAttachmentFiles] = useState<File[]>([]);
+
+  const handleAddNote = () => {
+    if (noteText.trim() && onUpdateRequest) {
+      const newUpdate: RequestUpdate = {
+        id: `upd-${Date.now()}`,
+        author: 'Current User',
+        role: 'Assigned Employee',
+        note: noteText,
+        attachments: attachmentFiles.map(f => f.name),
+        date: new Date().toLocaleDateString('en-US'),
+      };
+
+      const updatedUpdates = [...request.updates, newUpdate];
+      onUpdateRequest(request.id, {
+        updates: updatedUpdates,
+        counts: {
+          ...request.counts,
+          files: request.counts.files + attachmentFiles.length,
+          updates: updatedUpdates.length,
+        },
+      });
+
+      setNoteText('');
+      setAttachmentFiles([]);
+      setShowNoteForm(false);
+    }
+  };
+
+  const handleDrag = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.type === 'dragenter' || e.type === 'dragover') {
+      setDragActive(true);
+    } else if (e.type === 'dragleave') {
+      setDragActive(false);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setDragActive(false);
+
+    const files = Array.from(e.dataTransfer.files);
+    setAttachmentFiles(prev => [...prev, ...files]);
+  };
+
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      setAttachmentFiles(prev => [...prev, ...files]);
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setAttachmentFiles(prev => prev.filter((_, i) => i !== index));
+  };
   return (
     <div className="request-detail-shell">
       <div className="request-detail-header">
@@ -30,15 +94,7 @@ export default function RequestDetail({ request, onBack }: RequestDetailProps) {
         <div className="request-detail-info-grid">
           <div className="request-detail-block">
             <h2>Progress</h2>
-            <div className="progress-detail-line">
-              {request.progress.map((step, index) => (
-                <div key={step.label} className="progress-detail-step">
-                  <div className={`progress-detail-dot ${step.status}`} />
-                  <span className="progress-detail-label">{step.label}</span>
-                  {index < request.progress.length - 1 && <div className="progress-detail-bar" />}
-                </div>
-              ))}
-            </div>
+            <ProgressBar request={request} interactive={true} />
           </div>
 
           <div className="request-detail-block">
@@ -91,8 +147,72 @@ export default function RequestDetail({ request, onBack }: RequestDetailProps) {
           <div className="notes-panel">
             <div className="notes-header">
               <h3>Notes & Updates</h3>
-              <button type="button" className="primary-button">+ Add Note</button>
+              <button type="button" className="primary-button" onClick={() => setShowNoteForm(!showNoteForm)}>
+                {showNoteForm ? '✕ Cancel' : '+ Add Note'}
+              </button>
             </div>
+
+            {showNoteForm && (
+              <div className="note-form">
+                <textarea
+                  className="note-textarea"
+                  placeholder="Add a note or update..."
+                  value={noteText}
+                  onChange={(e) => setNoteText(e.target.value)}
+                  rows={4}
+                />
+
+                {attachmentFiles.length > 0 && (
+                  <div className="attached-files">
+                    <p className="attached-files-label">Attached Files ({attachmentFiles.length}):</p>
+                    <div className="file-list">
+                      {attachmentFiles.map((file, index) => (
+                        <div key={index} className="file-item">
+                          <span className="file-name">{file.name}</span>
+                          <button
+                            type="button"
+                            className="file-remove"
+                            onClick={() => removeFile(index)}
+                          >
+                            ✕
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="note-form-actions">
+                  <div
+                    className={`mini-dropzone ${dragActive ? 'active' : ''}`}
+                    onDragEnter={handleDrag}
+                    onDragLeave={handleDrag}
+                    onDragOver={handleDrag}
+                    onDrop={handleDrop}
+                  >
+                    <input
+                      type="file"
+                      id="note-file-input"
+                      multiple
+                      onChange={handleFileInput}
+                      style={{ display: 'none' }}
+                    />
+                    <label htmlFor="note-file-input" className="mini-dropzone-label">
+                      📎 Attach files
+                    </label>
+                  </div>
+                  <button
+                    type="button"
+                    className="primary-button"
+                    onClick={handleAddNote}
+                    disabled={!noteText.trim()}
+                  >
+                    Post Note
+                  </button>
+                </div>
+              </div>
+            )}
+
             <div className="note-list">
               {request.updates.length > 0 ? (
                 request.updates.map((update) => (
@@ -102,6 +222,18 @@ export default function RequestDetail({ request, onBack }: RequestDetailProps) {
                       <span>{update.date}</span>
                     </div>
                     <p>{update.note}</p>
+                    {update.attachments.length > 0 && (
+                      <div className="note-attachments">
+                        <small className="attachment-label">{update.attachments.length} file(s) attached</small>
+                        <div className="attachment-list">
+                          {update.attachments.map((attachment, idx) => (
+                            <div key={idx} className="attachment-item">
+                              📄 {attachment}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
@@ -113,11 +245,45 @@ export default function RequestDetail({ request, onBack }: RequestDetailProps) {
           <div className="attachments-panel">
             <div className="attachments-header">
               <h3>Attachments</h3>
-              <button type="button" className="secondary-button">+</button>
             </div>
-            <div className="attachment-dropzone">
-              <p>Drag & drop files here or click to browse</p>
+            <div
+              className={`attachment-dropzone ${dragActive ? 'active' : ''}`}
+              onDragEnter={handleDrag}
+              onDragLeave={handleDrag}
+              onDragOver={handleDrag}
+              onDrop={handleDrop}
+            >
+              <input
+                type="file"
+                id="main-file-input"
+                multiple
+                onChange={handleFileInput}
+                style={{ display: 'none' }}
+              />
+              <label htmlFor="main-file-input" className="dropzone-label">
+                <div>📁 Drag & drop files here or click to browse</div>
+              </label>
             </div>
+
+            {attachmentFiles.length > 0 && (
+              <div className="pending-attachments">
+                <p className="pending-label">Pending Files ({attachmentFiles.length}):</p>
+                <div className="pending-files-list">
+                  {attachmentFiles.map((file, index) => (
+                    <div key={index} className="pending-file-item">
+                      <span className="file-name">📄 {file.name}</span>
+                      <button
+                        type="button"
+                        className="file-remove"
+                        onClick={() => removeFile(index)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

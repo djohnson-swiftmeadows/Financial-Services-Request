@@ -197,7 +197,7 @@ function App() {
         )}
 
         {view === 'requestDetail' && selectedRequest && (
-          <RequestDetail request={selectedRequest} onBack={() => setView('myRequests')} />
+          <RequestDetail request={selectedRequest} onBack={() => setView('myRequests')} onUpdateRequest={handleUpdateRequest} />
         )}
 
         {view === 'newRequest' && <NewRequestForm onBack={() => setView('myRequests')} onSubmit={handleCreateRequest} />}
