@@ -6,6 +6,7 @@ import NewRequestForm from './components/NewRequestForm';
 import RequestDetail from './components/RequestDetail';
 import NotificationCenter from './components/NotificationCenter';
 import { requests as initialRequests, summaryCards } from './data';
+import { getCurrentDate } from './utils/dateFormatter';
 import type { RequestItem, RequestType, RequestStatus, Role, PriorityLevel } from './types';
 
 export type RequestFilterType = RequestType | 'All Types';
@@ -87,7 +88,7 @@ function App() {
     const sequentialNumber = nextFsrNumber.toString().padStart(4, '0');
     const id = `FSR-${fiscalYear}-${sequentialNumber}`;
     setNextFsrNumber(nextFsrNumber + 1);
-    const createdAt = new Date().toLocaleDateString('en-US');
+    const createdAt = getCurrentDate();
 
     const newRequest: RequestItem = {
       id,

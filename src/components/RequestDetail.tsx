@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { RequestItem, RequestUpdate } from '../types';
 import ProgressBar from './ProgressBar';
+import { formatDateTime } from '../utils/dateFormatter';
 
 interface RequestDetailProps {
   request: RequestItem;
@@ -22,7 +23,7 @@ export default function RequestDetail({ request, onBack, onUpdateRequest }: Requ
         role: 'Assigned Employee',
         note: noteText,
         attachments: attachmentFiles.map(f => f.name),
-        date: new Date().toLocaleDateString('en-US'),
+        date: formatDateTime(new Date()),
       };
 
       const updatedUpdates = [...request.updates, newUpdate];

@@ -1,5 +1,6 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { priorityOptions, requestTypeOptions } from '../data';
+import { formatDate } from '../utils/dateFormatter';
 import type { RequestType, PriorityLevel } from '../types';
 
 interface NewRequestFormProps {
@@ -25,11 +26,13 @@ export default function NewRequestForm({ onBack, onSubmit }: NewRequestFormProps
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    // Convert YYYY-MM-DD to DD-MMM-YYYY format
+    const formattedDueDate = dueDate ? formatDate(new Date(dueDate)) : '';
     onSubmit({
       title,
       type: requestType,
       priority,
-      dueDate,
+      dueDate: formattedDueDate,
       description,
       note,
       attachments: attachments.map((file) => file.name),

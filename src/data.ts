@@ -1,4 +1,5 @@
 import type { RequestItem } from './types';
+import { formatDate, formatDateTime } from './utils/dateFormatter';
 
 export const roles = ['Requestor', 'Frontline Manager', 'Assigned Employee', 'Administrator'] as const;
 
@@ -48,7 +49,7 @@ export const requests: RequestItem[] = [
     type: 'Budget Adjustment / Amendment',
     status: 'Submitted',
     priority: 'Standard Queue',
-    dueDate: '2026-05-18',
+    dueDate: '18-May-2026',
     manager: 'TBD',
     assignee: 'Unassigned',
     requestor: 'Jordan Lee',
@@ -67,7 +68,7 @@ export const requests: RequestItem[] = [
       updates: 0,
     },
     updates: [],
-    updatedAt: '5/18/2026',
+    updatedAt: '18-May-2026',
   },
   {
     id: 'FSR-26-0002',
@@ -75,7 +76,7 @@ export const requests: RequestItem[] = [
     type: 'New General Ledger / Project Ledger',
     status: 'Awaiting Approval',
     priority: 'High Priority',
-    dueDate: '2026-05-13',
+    dueDate: '13-May-2026',
     manager: 'Michael Chen',
     assignee: 'Sarah Johnson',
     requestor: 'David Kim',
@@ -100,9 +101,9 @@ export const requests: RequestItem[] = [
         role: 'Frontline Manager',
         note: 'Reviewing scope and verifying account structure.',
         attachments: ['project-plan.pdf'],
-        date: '2026-04-24',
+        date: '24-Apr-2026 10:30',
       },
     ],
-    updatedAt: '5/13/2026',
+    updatedAt: '13-May-2026',
   },
 ];
